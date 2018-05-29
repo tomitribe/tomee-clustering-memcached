@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context path="/">
+  <Manager className="${memcachedSessionManager}"
+           sticky="${sticky}"
+           memcachedNodes="${memcachedNodes}"
+           failoverNodes="${failoverNodes}"
+           requestUriIgnorePattern=".*\.(ico|png|gif|jpg|css|js)$"
+           transcoderFactoryClass="de.javakaffee.web.msm.JavaSerializationTranscoderFactory"
+      />
+</Context>

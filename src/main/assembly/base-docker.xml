@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>base-docker</id>
+
+  <dependencySets>
+    <dependencySet>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <useProjectArtifact>false</useProjectArtifact>
+      <unpack>true</unpack>
+      <outputDirectory>base</outputDirectory>
+    </dependencySet>
+    <dependencySet>
+      <includes>
+        <include>org.jolokia:jolokia-war</include>
+      </includes>
+      <outputDirectory>webapps</outputDirectory>
+      <outputFileNameMapping>jolokia.war</outputFileNameMapping>
+    </dependencySet>
+  </dependencySets>
+
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/src/main/tomee</directory>
+      <fileMode>0755</fileMode>
+      <outputDirectory>tomee</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.build.directory}</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>${project.build.finalName}.${project.packaging}</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>
