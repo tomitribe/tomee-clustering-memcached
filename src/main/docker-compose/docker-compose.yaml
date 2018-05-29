@@ -1,0 +1,41 @@
+version: '3'
+services:
+
+  lb-httpd:
+    image: superbiz/tomee-clustering-memcached-httpd
+    ports:
+      - 9080:80
+
+  seattle:
+    image: superbiz/tomee-clustering-memcached
+    container_name: seattle
+    ports:
+      - 9090:8080
+    environment:
+      - ENV_STICKY=true
+      - ENV_MEMCACHED_NODES=n1:seattle:11211,n2:boston:11211,n3:hawaii:11211
+      - ENV_FAILOVER_NODES=n1
+      - ENV_JVM_ROUTE=seattle
+
+  boston:
+    image: superbiz/tomee-clustering-memcached
+    container_name: boston
+    ports:
+      - 9091:8080
+    environment:
+      - ENV_STICKY=true
+      - ENV_MEMCACHED_NODES=n1:seattle:11211,n2:boston:11211,n3:hawaii:11211
+      - ENV_FAILOVER_NODES=n2
+      - ENV_JVM_ROUTE=boston
+
+  hawaii:
+    image: superbiz/tomee-clustering-memcached
+    container_name: hawaii
+    ports:
+      - 9092:8080
+    environment:
+      - ENV_STICKY=true
+      - ENV_MEMCACHED_NODES=n1:seattle:11211,n2:boston:11211,n3:hawaii:11211
+      - ENV_FAILOVER_NODES=n3
+      - ENV_JVM_ROUTE=hawaii
+

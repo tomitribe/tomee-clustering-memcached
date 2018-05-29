@@ -1,0 +1,17 @@
+= TomEE Session Clustering using memcached
+
+== Abstract
+
+== Content
+
+== How to run it?
+
+=== Locally
+
+=== Using docker
+
+== Todo
+
+Current setup does not seem to work from the Apache HTTPD point of view.
+There is probably a typo or something in the mod_proxy.conf file because the load balancer is not able to reach out to the other docker containers.
+
