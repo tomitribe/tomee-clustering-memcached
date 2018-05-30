@@ -4,6 +4,13 @@
 
 This is a simple project aiming at demonstrating how to set up HTTP Session clustering in TomEE using memcached.
 
+== Prerequisits
+
+In order to run this small example, you need to properly install
+* Java 8 JDK
+* Maven 3+
+* Docker
+
 == Content
 
 The application is fairly simple and only has a simple JSP to visualise the current session ID and an easy way to add some data in there.
