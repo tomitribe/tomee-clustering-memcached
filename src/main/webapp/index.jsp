@@ -16,6 +16,7 @@ limitations under the License.
 <%@page import="java.util.ArrayList" %>
 <%@page import="java.util.Date" %>
 <%@page import="java.util.List" %>
+<%@ page import="de.javakaffee.web.msm.MemcachedBackupSession" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -25,18 +26,44 @@ limitations under the License.
 </head>
 <body>
 <span style="font-size: large; color: #0000FF">
-    Instance <%=InetAddress.getLocalHost()%> <br/><br/>
+    Instance <%=InetAddress.getLocalHost()%>
+    <br/><br/>
 </span>
 
 <hr/>
 
 <span style="font-size: large; color: #CC0000">
     <br/>
-    Session Id : <%=request.getSession().getId()%> <br/>
-    Is it New Session : <%=request.getSession().isNew()%><br/>
-    Session Creation Date : <%=new Date(request.getSession().getCreationTime())%><br/>
-    Session Access Date : <%=new Date(request.getSession().getLastAccessedTime())%><br/><br/>
+    Session Id : <%=session.getId()%> <br/>
+    Is it New Session : <%=session.isNew()%><br/>
+    Session Creation Date : <%=new Date(session.getCreationTime())%><br/>
+    Session Access Date : <%=new Date(session.getLastAccessedTime())%><br/><br/>
 </span>
+
+<hr/>
+
+<span style="font-size: large; color: #CC0000">
+    <br/>
+    <%
+    if (MemcachedBackupSession.class.isInstance(session)) {
+        MemcachedBackupSession memcachedBackupSession = MemcachedBackupSession.class.cast(session);
+
+    %>
+        Using Memcached session manager.
+
+    Is sticky: <%=memcachedBackupSession.isSticky()%>
+        Is locked: <%=memcachedBackupSession.isLocked()%>
+        Is session ID changed: <%=memcachedBackupSession.isSessionIdChanged()%>
+        Is valid interval: <%=memcachedBackupSession.isValidInternal()%>
+    <%
+    } else {
+    %>
+        Not using Memcached session nanager.
+    <%
+    }
+    %>
+</span>
+
 
 <b>Cart List </b><br/>
 <hr/>
