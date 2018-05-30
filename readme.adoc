@@ -2,16 +2,74 @@
 
 == Abstract
 
+This is a simple project aiming at demonstrating how to set up HTTP Session clustering in TomEE using memcached.
+
 == Content
+
+The application is fairly simple and only has a simple JSP to visualise the current session ID and an easy way to add some data in there.
+It all relies on the library https://github.com/magro/memcached-session-manager which has support for Tomcat 7, 8 and 9.
+
+In order to run everything, there are 2 options
+* run locally with TomEE maven plugin for testing the application
+* use docker to create various containers and have a more real life deployment
+
+The Docker images are build as part of the build, it should be all ready to run after the build.
 
 == How to run it?
 
 === Locally
 
+As said previously, the local option is primarily targeting development.
+Idea is to being able to work on the application with a Mock implementation of the session manager and therefor no need to set up a memcached cluster.
+
+It is as simple as
+
+```
+mvn clean package -DskipTests tomee:run
+```
+
+Then, you just need to open a browser to `http://localhost:8080/tomee-clustering-memcached-1.0-SNAPSHOT`
+
+NOTE: it is possible to change the context path to something shorter.
+
+
 === Using docker
+
+During the build process, maven is going to build all necessary docker images.
+There is one for the load balancer based on Apache HTTPD.
+There is another for the TomEE instances.
+
+To make it easier to run and test, there is a docker-compose file available under `src/main/docker-compose`.
+Make sure to go to that directory and run
+
+```
+docker-compose up
+```
+
+This should start 4 containers:
+* 3 of type TomEE named: seattle, boston and hawaii
+* and one for Apache HTTPD named lb-httpd
+
+After everything is up and running, you can hit every TomEE instance individually.
+But the goal is to use the Apache HTTPD load balancer.
+
+So make sure to open a browser at `http://localhost:9080/tomee-clustering-memcached-1.0-SNAPSHOT`
+
+It should pick up one of the 3 TomEE instance.
+By checking the JSP data, you will know the one that server the request.
+
+As the configuration has sticky session configured, you will always end up by going to the same backend TomEE.
+
+Now, add a couple of entries into the map.
+
+Then, do a docker stop on the container that was serving your request and refresh the page.
+You should see the same data, but served by another backend server and therfore with a new JSessionID.
 
 == Todo
 
-Current setup does not seem to work from the Apache HTTPD point of view.
-There is probably a typo or something in the mod_proxy.conf file because the load balancer is not able to reach out to the other docker containers.
+Current setup does not seem to work properly from the Apache HTTPD point of view.
+The /balancer-manager does not seem to work.
+
+Locally with the same configuration outside Docker, it seems to work, so probably so weird issue with my Docker set up.
+
 
